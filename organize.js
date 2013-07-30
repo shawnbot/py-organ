@@ -57,16 +57,24 @@ var stream = csv()
                 filename = path.basename(dest);
             console.log("writing %s (%d rows)", dest, f.values.length);
 
-            mkdirp(dirname);
-
-            var out = csv()
-              .from.array(f.values)
-              .transform(function(d) {
-                console.log("+", dest, d);
-                return d;
-              })
-              .to(dest, outOptions)
-              .on("end", done);
+            mkdirp(dirname, function(error) {
+              if (error) {
+                throw "Failed to mkdirp(" + dirname + ")";
+              }
+              csv()
+                .from.array(f.values)
+                .transform(function(d) {
+                  // console.log("+", dest, d);
+                  return d;
+                })
+                .to(dest, outOptions)
+                .on("error", function(err) {
+                  console.warn("error on %s: %s", dest, err);
+                })
+                .on("end", function() {
+                  done(null, dest);
+                });
+            });
             return dest;
           };
         });
@@ -76,8 +84,9 @@ var stream = csv()
       console.log("%d. %s (%d rows)", i + 1, f.filename, f.values.length);
     });
 
-    async.parallel(tasks, function() {
-      console.log("wrote %d files.", arguments.length);
+    async.parallelLimit(tasks, 64, function(error) {
+      if (error) throw "Uh-oh: " + error;
+      console.log("wrote %d files.", files.length);
     });
 
   });
