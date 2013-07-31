@@ -31,7 +31,6 @@ def main(reader, **kwargs):
         map_expr = organ.map_expression(map_expr)
         fieldnames = map_expr.keys
 
-    # XXX: this does not produce a generator
     grouped = organ.organize(rows, key)
     keys = grouped.keys()
     items = map(lambda k: {'key': k, 'length': len(grouped[k])}, keys)
@@ -180,7 +179,6 @@ reported), not their contents.
         'filename':     options.filename,
         'filter_expr':  options.filter_expr,
         'map_expr':     options.map_expr,
-        'out_dialect':  options.dialect,
         'allow_empty':  options.allow_empty,
         'readonly':     options.readonly,
         'sort_rows':    options.sort_rows,
