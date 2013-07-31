@@ -2,7 +2,7 @@
 Organ is a collection of tools for "digesting" tabular data.
 """
 
-VERSION = "0.1.0"
+VERSION = "0.0.1"
 
 def templategetter(tmpl):
     """
@@ -16,6 +16,33 @@ def templategetter(tmpl):
     tmpl = tmpl.replace('{', '%(')
     tmpl = tmpl.replace('}', ')s')
     return lambda data: tmpl % data
+
+def sorter(expr):
+    """
+    This is a sorting function generator that takes an expression optionally
+    prefixed with a "+" (ascending, the default) or "-" (descending) character.
+
+    >>> sorted([{'a': 12}, {'a': 1}, {'a': 4}], sorter("+a")).values()
+    [1, 4, 12]
+    >>> sorted([{'a': 24}, {'a': 16}, {'a': 32}], sorter("-a")).values()
+    [32, 24, 16]
+    """
+    order = ascending
+    if expr[0] == '-':
+        order = descending
+        expr = expr[1:]
+    elif expr[0] == '+':
+        expr = expr[1:]
+    expr = iffy(expr)
+    def _sort(a, b):
+        return order(expr(a), expr(b))
+    return _sort
+
+def ascending(aa, bb):
+    return (aa > bb and 1 or (aa < bb and -1 or 0))
+
+def descending(aa, bb):
+    return (aa > bb and -1 or (aa < bb and 1 or 0))
 
 def organize(data, key):
     """

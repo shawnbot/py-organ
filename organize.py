@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import sys
-import itertools
+import itertools, operator
 import organ
 
 def main(reader, **kwargs):
@@ -17,6 +17,9 @@ def main(reader, **kwargs):
     filename_template = kwargs.get('filename', '%.csv')
     input_format = kwargs.get('input_format', 'csv')
     fieldnames = kwargs.get('fieldnames')
+    readonly = kwargs.get('readonly', False)
+    sort_keys = kwargs.get('sort_keys')
+    sort_rows = kwargs.get('sort_rows')
 
     if filter_expr:
         expr = organ.expression(filter_expr)
@@ -30,7 +33,15 @@ def main(reader, **kwargs):
 
     # XXX: this does not produce a generator
     grouped = organ.organize(rows, key)
-    for key, values in grouped.items():
+    keys = grouped.keys()
+    items = map(lambda k: {'key': k, 'length': len(grouped[k])}, keys)
+
+    if sort_keys:
+        items.sort(organ.sorter(sort_keys))
+        keys = map(operator.itemgetter('key'), items)
+
+    for key in keys:
+        values = grouped[key]
         if (not key or key == 'None') and not allow_empty:
             print >> sys.stderr, '(skipping empty key with %d rows)' % len(values)
             continue
@@ -39,12 +50,18 @@ def main(reader, **kwargs):
         filename = filename_template % key
         print >> sys.stderr, '%d rows -> %s' % (len(values), filename)
 
+        if readonly == True:
+            continue
+
         dirname = os.path.dirname(filename)
         if dirname and not os.path.exists(dirname):
             os.makedirs(dirname)
 
         if map_expr:
             values = itertools.imap(map_expr, values)
+
+        if sort_rows:
+            values = sorted(values, organ.sorter(sort_rows))
 
         if not fieldnames:
             fieldnames = reader.fieldnames
@@ -118,10 +135,27 @@ excludes other columns; "*,date=DateTime[0:10]" copies all columns and creates
 a new "date" column containing the first 10 chars of the "DateTime" column.
     """.strip())
 
-    parser.add_option('--empty', '-e',dest='allow_empty', action='store_true', help="""
+    parser.add_option('--empty', '-e', dest='allow_empty', action='store_true', help="""
 By default we discard rows for which the key expression evaluates to an empty value.
 Setting this flag forces the inclusion of empty keys, which will likely produce
 unusual filenames (".csv").
+    """.strip())
+
+    parser.add_option('--readonly', '-r', dest='readonly', action='store_true', help="""
+Don't write any files; just report the filenames and the number of rows that
+would be written to each.
+    """.strip())
+
+    parser.add_option('--sort', '-s', dest='sort_rows', help="""
+Sort rows in the output by an expression with optional "-" (descending) or "+"
+(ascending, the default) order. Like --filter, the rest of the expression is
+evaluated with the row's keys as local variables.
+    """.strip())
+
+    parser.add_option('--sort-keys', '-S', dest='sort_keys', default=None, help="""
+Sort the output keys, either by key ("+key", "-key") or size ("+length",
+"-length"). This affects only the order in which data files are written (and
+reported), not their contents.
     """.strip())
 
     options, args = parser.parse_args()
@@ -140,12 +174,15 @@ unusual filenames (".csv").
 
     reader = csv.DictReader(input_handle, dialect=options.dialect)
     main(reader, **{
-        'key':                  options.key,
-        'key_expr':             options.key_expr,
-        'dialect':              options.dialect,
-        'filename':             options.filename,
-        'filter_expr':          options.filter_expr,
-        'map_expr':             options.map_expr,
-        'out_dialect':          options.dialect,
-        'allow_empty':          options.allow_empty
+        'key':          options.key,
+        'key_expr':     options.key_expr,
+        'dialect':      options.dialect,
+        'filename':     options.filename,
+        'filter_expr':  options.filter_expr,
+        'map_expr':     options.map_expr,
+        'out_dialect':  options.dialect,
+        'allow_empty':  options.allow_empty,
+        'readonly':     options.readonly,
+        'sort_rows':    options.sort_rows,
+        'sort_keys':    options.sort_keys,
     })
