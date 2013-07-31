@@ -1,0 +1,7 @@
+Organ!
+
+Organ is the tabular data digester and organizer. It provides useful Python
+functions and a command-line tool, organize.py, which reads CSV and divvies it
+up into data-specific directories.
+
+[more on the way]
