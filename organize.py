@@ -30,15 +30,14 @@ def main(reader, **kwargs):
 
     # XXX: this does not produce a generator
     grouped = organ.organize(rows, key)
-    for key in grouped.keys():
-        values = grouped.get(key)
+    for key, values in grouped.items():
         if (not key or key == 'None') and not allow_empty:
             print >> sys.stderr, '(skipping empty key with %d rows)' % len(values)
             continue
         # print >> sys.stderr, "key '%s': %d rows" % (key, len(values))
 
         filename = filename_template % key
-        print >> sys.stderr, 'Writing %d rows to %s...' % (len(values), filename)
+        print >> sys.stderr, '%d rows -> %s' % (len(values), filename)
 
         dirname = os.path.dirname(filename)
         if dirname and not os.path.exists(dirname):
