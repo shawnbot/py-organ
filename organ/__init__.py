@@ -22,10 +22,10 @@ def sorter(expr):
     This is a sorting function generator that takes an expression optionally
     prefixed with a "+" (ascending, the default) or "-" (descending) character.
 
-    >>> sorted([{'a': 12}, {'a': 1}, {'a': 4}], sorter("+a")).values()
-    [1, 4, 12]
-    >>> sorted([{'a': 24}, {'a': 16}, {'a': 32}], sorter("-a")).values()
-    [32, 24, 16]
+    >>> sorted([{'a': 12}, {'a': 1}, {'a': 4}], sorter("+a"))
+    [{'a': 1}, {'a': 4}, {'a': 12}]
+    >>> sorted([{'a': 24}, {'a': 16}, {'a': 32}], sorter("-a"))
+    [{'a': 32}, {'a': 24}, {'a': 16}]
     """
     order = ascending
     if expr[0] == '-':
@@ -95,6 +95,8 @@ def iffy_map(expr):
 
     >>> iffy_map("foo=bar")({'bar': 1})
     {'foo': 1}
+    >>> iffy_map("foo=bar+1")({'bar': 1})
+    {'foo': 2}
     """
     # first, split the string on commas to get key/value bits
     # XXX: should we allow people to escape commas here?
