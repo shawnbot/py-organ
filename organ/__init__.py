@@ -1,7 +1,6 @@
 """
 Organ is a collection of tools for "digesting" tabular data.
 """
-import itertools
 
 VERSION = "0.0.1"
 
@@ -51,9 +50,10 @@ def iffy(expr):
     if len(expr) == 0:
         return lambda d: None
 
-    def _expr(data, index=None, key=None):
+    def _expr(data, **kwargs):
         context = locals()
         context.update(data)
+        context.update(kwargs)
         return eval(expr, globals(), context)
     _expr.__doc__ = expr
     return _expr
@@ -84,7 +84,7 @@ def iffy_map(expr):
         (k[0], k[1] and iffy(k[1]) or None)
         for k in exprs
     ])
-    def _expr(data, index=None):
+    def _expr(data, **kwargs):
         vals = {}
         for key, expr in keys.items():
             # the SQL * selects all keys
@@ -99,10 +99,11 @@ def iffy_map(expr):
             # XXX: this will throw an exception if the named key doesn't exist
             # in the data dict!
             else:
-                vals[key] = expr(data, index=index, key=key)
+                vals[key] = expr(data, **kwargs)
         return vals
     _expr.__doc__ = expr
+    _expr.keys = keys.keys()
     return _expr
 
-# export iffy_map as "expression_map"
-expression_map = iffy_map
+# export iffy_map as "map_expression"
+map_expression = iffy_map
