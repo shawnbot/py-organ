@@ -2,7 +2,7 @@
 Organ is a collection of tools for "digesting" tabular data.
 """
 
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 
 def templategetter(tmpl):
     """
@@ -28,12 +28,13 @@ def sorter(expr):
     [{'a': 32}, {'a': 24}, {'a': 16}]
     """
     order = ascending
-    if expr[0] == '-':
-        order = descending
-        expr = expr[1:]
-    elif expr[0] == '+':
-        expr = expr[1:]
-    expr = iffy(expr)
+    if not callable(expr):
+        if expr[0] == '-':
+            order = descending
+            expr = expr[1:]
+        elif expr[0] == '+':
+            expr = expr[1:]
+        expr = iffy(expr)
     def _sort(a, b):
         return order(expr(a), expr(b))
     return _sort
@@ -74,6 +75,9 @@ def iffy(expr):
     >>> iffy("bar + 1")({'bar': 2})
     3
     """
+    if callable(expr):
+        return expr
+
     if len(expr) == 0:
         return lambda d: None
 
@@ -98,6 +102,9 @@ def iffy_map(expr):
     >>> iffy_map("foo=bar+1")({'bar': 1})
     {'foo': 2}
     """
+    if callable(expr):
+        return expr
+
     # first, split the string on commas to get key/value bits
     # XXX: should we allow people to escape commas here?
     # XXX: what's a good test case for commas in an expression?
