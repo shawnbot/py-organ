@@ -1,3 +1,5 @@
 *.pyc
 .*.sw?
-node_modules
+build
+dist
+MANIFEST
