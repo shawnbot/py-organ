@@ -15,6 +15,6 @@ setup(name='organ',
       url='http://shawnbot.github.io/organ',
       install_requires=requires,
       packages=['organ'],
-      scripts=['bin/organize.py'],
+      scripts=['organize.py'],
       download_url='https://github.com/shawnbot/py-organ/archive/v%s.tar.gz' % version,
       license='BSD')
