@@ -10,6 +10,18 @@ requires = ['csv']
 setup(name='organ',
       version=version,
       description='A tabular data organizer',
+      classifiers=[
+          'Development Status :: 3 - Alpha',
+          'Environment :: Console',
+          'License :: OSI Approved :: BSD License',
+          'Natural Language :: English',
+          'Operating System :: POSIX',
+          'Programming Language :: Python',
+          'Topic :: Scientific/Engineering :: Information Analysis',
+          'Topic :: Software Development :: Libraries :: Python Modules',
+          'Topic :: Text Processing :: Filters',
+          'Topic :: Utilities'
+      ],
       author='Shawn Allen',
       author_email='shawn@stamen.com',
       url='http://shawnbot.github.io/organ',
