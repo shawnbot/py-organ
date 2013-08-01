@@ -1,17 +1,42 @@
 # Organ
 
 Organ is a tabular data digester and organizer. It provides useful Python
-functions and a command-line tool, organize.py, which reads CSV and divvies
-it up into data-specific directories.
+functions and some command-line tools:
 
-## organize.py
+## csvfilter
+A tool for performing map and filter operations on CSV data:
+
+```
+Usage: csvfilter [options] [--filter <FILTER>] [--map <MAP>] [<CSV>]
+
+Options:
+  -h, --help            show this help message and exit
+  -F FILTER_EXPR, --filter=FILTER_EXPR
+                        An optional Python expression by which to filter input
+                        data, evaluated with each row's keys as local
+                        variables, e.g. "DayOfWeek == 'Monday'"
+  -m MAP_EXPR, --map=MAP_EXPR
+                        An expression describing which keys to write to the
+                        output and, for each, an optional expression to
+                        evaluate. This is like a SQL SELECT clause, except
+                        with "=" instead of the "AS" keyword: "foo=Foo"
+                        lowercases the "Foo" column and excludes other
+                        columns; "*,date=DateTime[0:10]" copies all columns
+                        and creates a new "date" column containing the first
+                        10 chars of the "DateTime" column.
+  -d DIALECT, --dialect=DIALECT
+                        The CSV dialect used to read and write data files, per
+                        Python's csv module (default: "excel")
+```
+
+## csvorganize
 
 ```
 Usage: 
-    organize.py [options] (--key | -k) <KEY> [<CSV>]
-    organize.py [options] (--key-expr | -K) <KEY EXPRESSION> [<CSV>]
+    csvorganize [options] (--key | -k) <KEY> [<CSV>]
+    csvorganize [options] (--key-expr | -K) <KEY EXPRESSION> [<CSV>]
 
-organize.py takes a single CSV filename (or reads CSV from stdin) and runs a
+csvorganize takes a single CSV filename (or reads CSV from stdin) and runs a
 "key function" on each row to generate a filesystem path to which the row
 should be written, grouping rows with the same "key" into smaller collections.
 Some examples:
@@ -19,14 +44,14 @@ Some examples:
 Organize a CSV file with Year, Month and Date columns into nested
 subdirectories of CSV data:
 
-    organize.py --key "{Year}/{Month}/{Date}" path/to/dates.csv
+    csvorganize --key "{Year}/{Month}/{Date}" path/to/dates.csv
 
 Classify geographic statistics, e.g. in a table that contains rows for
 states, cities and zip codes:
 
-    organize.py --filter "Region == 'State'"  --key "states/{State}"
-    organize.py --filter "Region == 'City'"   --key "states/{State}/cities"
-    organize.py --filter "Region == 'Zip'"    --key "states/{State}/cities/{City}/zips"
+    csvorganize --filter "Region == 'State'"  --key "states/{State}"
+    csvorganize --filter "Region == 'City'"   --key "states/{State}/cities"
+    csvorganize --filter "Region == 'Zip'"    --key "states/{State}/cities/{City}/zips"
 
 Options:
   -h, --help            show this help message and exit
