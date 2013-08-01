@@ -2,7 +2,7 @@
 Organ is a collection of tools for "digesting" tabular data.
 """
 
-VERSION = "0.1.5"
+VERSION = "0.2.0"
 
 def templategetter(tmpl):
     """
