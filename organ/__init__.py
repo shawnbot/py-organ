@@ -34,7 +34,7 @@ def sorter(expr):
             expr = expr[1:]
         elif expr[0] == '+':
             expr = expr[1:]
-        expr = iffy(expr)
+        expr = expression(expr)
     def _sort(a, b):
         return order(expr(a), expr(b))
     return _sort
@@ -65,14 +65,14 @@ def organize(data, key):
             groups[k] = [row]
     return groups
 
-def iffy(expr):
+def expression(expr):
     """
     Returns a function that treats the keys of a dictionary as locals, and
     returns the expression, e.g.:
 
-    >>> iffy("foo")({'foo': 'bar'})
+    >>> expression("foo")({'foo': 'bar'})
     'bar'
-    >>> iffy("bar + 1")({'bar': 2})
+    >>> expression("bar + 1")({'bar': 2})
     3
     """
     if callable(expr):
@@ -89,17 +89,14 @@ def iffy(expr):
     _expr.__doc__ = expr
     return _expr
 
-# export iffy as "expression"
-expression = iffy
-
-def iffy_map(expr):
+def map_expression(expr):
     """
     Returns a function that maps a dict to a new dict with unique keys and
     values, kind of like a SQL SELECT clause, e.g.:
 
-    >>> iffy_map("foo=bar")({'bar': 1})
+    >>> map_expression("foo=bar")({'bar': 1})
     {'foo': 1}
-    >>> iffy_map("foo=bar+1")({'bar': 1})
+    >>> map_expression("foo=bar+1")({'bar': 1})
     {'foo': 2}
     """
     if callable(expr):
@@ -114,10 +111,9 @@ def iffy_map(expr):
         (bit[0].strip(), len(bit) > 1 and bit[1].strip() or '')
         for bit in [bit.split('=') for bit in bits]
     ]
-    # then, convert those into a dict where each key points to an iffy()
-    # expression function
+    # then, convert those into a dict where each key indicates an expression()
     keys = dict([
-        (k[0], k[1] and iffy(k[1]) or None)
+        (k[0], k[1] and expression(k[1]) or None)
         for k in exprs
     ])
     def _expr(data, **kwargs):
@@ -141,5 +137,3 @@ def iffy_map(expr):
     _expr.keys = keys.keys()
     return _expr
 
-# export iffy_map as "map_expression"
-map_expression = iffy_map
