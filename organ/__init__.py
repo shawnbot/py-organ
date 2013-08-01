@@ -29,6 +29,9 @@ def sorter(expr):
     """
     order = ascending
     if not callable(expr):
+        if ',' in expr:
+            sorts = map(sorter, expr.split(','))
+            return multisorter(*sorts)
         if expr[0] == '-':
             order = descending
             expr = expr[1:]
@@ -37,6 +40,15 @@ def sorter(expr):
         expr = expression(expr)
     def _sort(a, b):
         return order(expr(a), expr(b))
+    return _sort
+
+def multisorter(*sorts):
+    def _sort(aa, bb):
+        for sort in sorts:
+            order = sort(aa, bb)
+            if order != 0:
+                return order
+        return 0
     return _sort
 
 def ascending(aa, bb):
