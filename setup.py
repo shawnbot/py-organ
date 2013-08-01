@@ -23,8 +23,13 @@ setup(name='organ',
       author='Shawn Allen',
       author_email='shawn@stamen.com',
       url='http://github.com/shawnbot/py-organ',
-      requires=['csv'],
       packages=['organ'],
-      scripts=['organize.py'],
+      requires=[
+          'csv'
+      ],
+      scripts=[
+          'csvorganize',
+          'csvfilter'
+      ],
       download_url='https://github.com/shawnbot/py-organ/archive/v%s.tar.gz' % version,
       license='BSD')
