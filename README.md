@@ -142,5 +142,5 @@ the expression for two values. So:
 ### `organ.ascending(a, b)`
 Returns `1` if `a > b`, `-1` if `a < b`, otherwise `0`.
 
-### organ.descending(a, b)
+### `organ.descending(a, b)`
 Returns `-1` if `a > b`, `1` if `a < b`, otherwise `0`.
