@@ -99,7 +99,7 @@ provide a string in the format:
 
 `key [ = expression] [, key [ = expression]] +`
 
-That is, one or more `key` and option `=expression` clauses, separated by
+That is, one or more `key` and optional `=expression` clauses, separated by
 commas. (Whitespace is ignored around keys and expressions.) For example:
 
 ```
