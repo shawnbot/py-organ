@@ -124,13 +124,14 @@ def map_expression(expr):
         for bit in [bit.split('=') for bit in bits]
     ]
     # then, convert those into a dict where each key indicates an expression()
-    keys = dict([
+    keys = [
         (k[0], k[1] and expression(k[1]) or None)
         for k in exprs
-    ])
+    ]
+    key_dict = dict(keys)
     def _expr(data, **kwargs):
         vals = {}
-        for key, expr in keys.items():
+        for key, expr in key_dict.items():
             # the SQL * selects all keys
             if key == '*':
                 vals.update(data)
@@ -146,6 +147,6 @@ def map_expression(expr):
                 vals[key] = expr(data, **kwargs)
         return vals
     _expr.__doc__ = expr
-    _expr.keys = keys.keys()
+    _expr.keys = map(lambda k: k[0], keys)
     return _expr
 
