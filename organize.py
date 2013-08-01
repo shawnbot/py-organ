@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-import sys
+import sys, os
 import itertools, operator
+import csv
 import organ
 
 def main(reader, **kwargs):
@@ -72,10 +73,7 @@ def main(reader, **kwargs):
         fp.close()
 
 if __name__ == '__main__':
-    import os
-    import itertools
     import optparse
-    import csv
 
     usage = """
     %prog [options] (--key | -k) <KEY> [<CSV>]
