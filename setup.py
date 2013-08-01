@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 from distutils.core import setup
 import pkg_resources
-import sys
+import organ
 
-version = open('VERSION', 'r').read().strip()
-
-requires = ['csv']
+version = organ.VERSION
 
 setup(name='organ',
       version=version,
@@ -25,7 +23,7 @@ setup(name='organ',
       author='Shawn Allen',
       author_email='shawn@stamen.com',
       url='http://github.com/shawnbot/py-organ',
-      requires=requires,
+      requires=['csv'],
       packages=['organ'],
       scripts=['organize.py'],
       download_url='https://github.com/shawnbot/py-organ/archive/v%s.tar.gz' % version,
