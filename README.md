@@ -90,8 +90,8 @@ False
 True
 ```
 
-Organ expressions are really useful in `map()` calls. Think of them as a
-more powerful version of `operator.itemgetter()`.
+Organ expressions are really useful with `filter()` and `map()`. Think of them
+as a more powerful version of `operator.itemgetter()`.
 
 ### `organ.map_expression(str)`
 Organ's map expressions are kind of like a SQL SELECT clause in Python. You
@@ -110,6 +110,8 @@ commas. (Whitespace is ignored around keys and expressions.) For example:
 >>> transform({'State': 'California'})
 {'state': 'CA', 'country': 'US'}
 ```
+
+Organ map expressions are, obviously, pretty useful with `map()`.
 
 
 ### `organ.templategetter(str)`
