@@ -1,6 +1,19 @@
 # Organ
 
-Organ is a tabular data digester and organizer. To install the command-line
+Organ is a tabular data digester and organizer. You can install the command-line
+tools with either easy_install or pip:
+
+```sh
+$ [sudo] easy_install organ
+# or
+$ [sudo] pip install organ
+```
+
+Or clone the repo and run the setup.py script:
+
+```sh
+$ python setup.py install
+```
 
 ## csvfilter
 A tool for performing map and filter operations on CSV data:
