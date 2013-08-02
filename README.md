@@ -1,7 +1,7 @@
 # Organ
 
-Organ is a tabular data digester and organizer. You can install the command-line
-tools with either easy_install or pip:
+Organ is a tabular data digester and organizer. You can install the Python module
+and command-line tools with either easy_install or pip:
 
 ```sh
 $ [sudo] easy_install organ
