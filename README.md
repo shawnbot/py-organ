@@ -1,7 +1,6 @@
 # Organ
 
-Organ is a tabular data digester and organizer. It provides useful Python
-functions and some command-line tools:
+Organ is a tabular data digester and organizer. To install the command-line
 
 ## csvfilter
 A tool for performing map and filter operations on CSV data:
