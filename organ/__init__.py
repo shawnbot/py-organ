@@ -2,7 +2,7 @@
 Organ is a collection of tools for "digesting" tabular data.
 """
 
-VERSION = "0.4.2"
+VERSION = "0.4.3"
 
 def templategetter(tmpl):
     """
@@ -86,6 +86,8 @@ def expression(expr):
     'bar'
     >>> expression("bar + 1")({'bar': 2})
     3
+    >>> expression("get('foo bar') == 'baz'")({'foo bar': 'baz'})
+    True
     """
     if callable(expr):
         return expr
@@ -95,6 +97,10 @@ def expression(expr):
 
     def _expr(data, **kwargs):
         context = locals()
+        if type(data) is dict:
+            context["get"] = data.get
+        else:
+            context["get"] = lambda attr: getattr(data, attr)
         context.update(data)
         context.update(kwargs)
         return eval(expr, globals(), context)
